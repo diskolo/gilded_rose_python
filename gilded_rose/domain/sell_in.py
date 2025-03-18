@@ -8,7 +8,12 @@ class SellIn:
         self.days = days
 
     def dicrease(self) -> "SellIn":
+        if self._is_end_date():
+            return SellIn(self.END_DATE)
         return SellIn(self.days - 1)
+
+    def _is_end_date(self):
+        return self.days == self.END_DATE
 
     def has_reached_end_date(self):
         return self.days == self.END_DATE

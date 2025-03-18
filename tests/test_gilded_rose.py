@@ -2,6 +2,7 @@ import unittest
 
 from gilded_rose.domain.aged_brie import AgedBrie
 from gilded_rose.domain.backstage import BackStage
+from gilded_rose.domain.conjured import Conjured
 from gilded_rose.domain.quality import Quality
 from gilded_rose.domain.sell_in import SellIn
 from gilded_rose.domain.sulfuras import Sulfuras
@@ -75,6 +76,15 @@ class GildedRoseTest(unittest.TestCase):
         gilded_rose.update_quality()
         self.assertEqual(items[0].sell_in.days, 0)
         self.assertEqual(items[0].quality.units, 0)
+
+    def test_conjured_item(self) -> None:
+        items = [
+            Conjured("Conjured", SellIn(2), Quality(40))
+        ]
+        gilded_rose = GildedRose(items)
+        gilded_rose.update_quality()
+        self.assertEqual(items[0].sell_in.days, 1)
+        self.assertEqual(items[0].quality.units, 38)
 
 
 
