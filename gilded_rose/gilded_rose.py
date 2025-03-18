@@ -1,47 +1,56 @@
+from gilded_rose.item import Item
 
-# -*- coding: utf-8 -*-
 
 class GildedRose(object):
+
+    AGED_BRIE = "Aged Brie"
+    SULFURAS = "Sulfuras, Hand of Ragnaros"
+    BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert"
 
     def __init__(self, items):
         self.items = items
 
     def update_quality(self):
         for item in self.items:
-            if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert":
-                if item.quality > 0:
-                    if item.name != "Sulfuras, Hand of Ragnaros":
-                        item.quality = item.quality - 1
-            else:
-                if item.quality < 50:
-                    item.quality = item.quality + 1
-                    if item.name == "Backstage passes to a TAFKAL80ETC concert":
-                        if item.sell_in < 11:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
-                        if item.sell_in < 6:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
-            if item.name != "Sulfuras, Hand of Ragnaros":
-                item.sell_in = item.sell_in - 1
-            if item.sell_in < 0:
-                if item.name != "Aged Brie":
-                    if item.name != "Backstage passes to a TAFKAL80ETC concert":
-                        if item.quality > 0:
-                            if item.name != "Sulfuras, Hand of Ragnaros":
-                                item.quality = item.quality - 1
-                    else:
-                        item.quality = item.quality - item.quality
-                else:
-                    if item.quality < 50:
-                        item.quality = item.quality + 1
+            if item.name == self.AGED_BRIE:
+                self._decrease_sell_in(item)
+                self._update_aged_brie_quality(item)
+            elif item.name == self.BACKSTAGE:
+                self._decrease_sell_in(item)
+                self._update_backstage_ticket_quality(item)
 
 
-class Item:
-    def __init__(self, name, sell_in, quality):
-        self.name = name
-        self.sell_in = sell_in
-        self.quality = quality
 
-    def __repr__(self):
-        return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
+    def _update_aged_brie_quality(self, item: Item) -> None:
+        if item.sell_in == 0:
+            self._increase_quality(item, 2)
+        else:
+            self._increase_quality(item, 1)
+
+
+    def _update_backstage_ticket_quality(self, item: Item) -> None:
+        if item.sell_in == 0:
+            item.quality = 0
+        elif item.sell_in < 6:
+            self._increase_quality(item, 3)
+        elif item.sell_in < 11:
+            self._increase_quality(item, 2)
+        else:
+            self._increase_quality(item, 1)
+
+
+    @staticmethod
+    def _increase_quality(item: Item, units: int) -> None:
+        if item.quality + units > 50:
+            item.quality = 50
+        else:
+            item.quality = item.quality + units
+
+    @staticmethod
+    def _decrease_sell_in(item) -> None:
+        if item.sell_in != 0:
+            item.sell_in = item.sell_in -1
+
+
+
+
