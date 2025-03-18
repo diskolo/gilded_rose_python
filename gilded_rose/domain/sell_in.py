@@ -23,3 +23,6 @@ class SellIn:
 
     def is_equals_or_less_than_eleven_days(self):
         return self.days < self.TEN_DAYS_THRESHOLD
+
+    def __eq__(self, other):
+        return isinstance(other, SellIn) and self.days == other.days
