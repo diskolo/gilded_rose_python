@@ -1,4 +1,6 @@
-from gilded_rose.item import Item
+from typing import List
+
+from gilded_rose.domain.item import Item
 
 
 class GildedRose(object):
@@ -7,25 +9,13 @@ class GildedRose(object):
     SULFURAS = "Sulfuras, Hand of Ragnaros"
     BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert"
 
-    def __init__(self, items):
+    def __init__(self, items: List[Item]):
         self.items = items
 
     def update_quality(self):
         for item in self.items:
-            if item.name == self.AGED_BRIE:
-                self._decrease_sell_in(item)
-                self._update_aged_brie_quality(item)
-            elif item.name == self.BACKSTAGE:
-                self._decrease_sell_in(item)
-                self._update_backstage_ticket_quality(item)
+            item.update()
 
-
-
-    def _update_aged_brie_quality(self, item: Item) -> None:
-        if item.sell_in == 0:
-            self._increase_quality(item, 2)
-        else:
-            self._increase_quality(item, 1)
 
 
     def _update_backstage_ticket_quality(self, item: Item) -> None:
